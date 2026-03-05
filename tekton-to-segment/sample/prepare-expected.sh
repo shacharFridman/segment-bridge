@@ -32,7 +32,7 @@ fi
 : > "$OUTPUT_FILE"
 count=0
 
-for f in $(find "$EXPECTED_DIR" -maxdepth 1 -name '*.yaml' -print | sort); do
+for f in $(find "$EXPECTED_DIR" -maxdepth 1 -name '*.yaml' -print | LC_ALL=C sort); do
   indices=$(yq eval-all 'di' -- "$f" 2>/dev/null) || true
   for i in $indices; do
     line=$(yq eval-all "select(di == $i) | ." -o=json -- "$f" 2>/dev/null | jq -c "$SORT_KEYS" 2>/dev/null) || true

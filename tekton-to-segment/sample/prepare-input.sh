@@ -22,13 +22,16 @@ if ! command -v jq &>/dev/null; then
   exit 1
 fi
 
+# Normalize JSON key order so output is deterministic across yq/jq versions
+SORT_KEYS='def sort_keys: if type == "object" then to_entries | sort_by(.key) | map({key: .key, value: (.value | sort_keys)}) | from_entries elif type == "array" then map(sort_keys) else . end; sort_keys'
+
 # Overwrite output; we append one line per YAML file
 : > "$OUTPUT_FILE"
 count=0
 skipped=0
 
-for f in $(find "$INPUT_DIR" -maxdepth 1 -name '*.yaml' -print | sort); do
-  line=$(yq eval -o=json '.' -- "$f" 2>/dev/null | jq -c '.' 2>/dev/null) || true
+for f in $(find "$INPUT_DIR" -maxdepth 1 -name '*.yaml' -print | LC_ALL=C sort); do
+  line=$(yq eval -o=json '.' -- "$f" 2>/dev/null | jq -c "$SORT_KEYS" 2>/dev/null) || true
   if [[ -z "$line" ]]; then
     echo "prepare-input.sh: warning: skipping (empty or invalid YAML): $f" >&2
     ((skipped++)) || true

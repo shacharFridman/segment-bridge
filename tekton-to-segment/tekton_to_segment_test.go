@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	scriptPath    = "../scripts/tekton-to-segment.sh"
-	inputPath     = "sample/input.json"
-	expectedPath  = "sample/expected.json"
-	clusterIDEnv  = "test-cluster"
+	scriptPath   = "../scripts/tekton-to-segment.sh"
+	inputPath    = "sample/input.json"
+	expectedPath = "sample/expected.json"
+	clusterIDEnv = "test-cluster"
 )
 
 func TestTektonToSegment(t *testing.T) {
