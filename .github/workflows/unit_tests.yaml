@@ -37,7 +37,7 @@ jobs:
           export PATH=~/packages:$PATH && \
           go test -short -v -coverprofile=coverage.out -covermode=atomic \
           $(go list ./... | grep -v \
-          '/splunk\|/fetch-uj-records\|/uid_map\|/ws_map')
+          '/splunk\|/fetch-uj-records')
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
